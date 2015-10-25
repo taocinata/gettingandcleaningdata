@@ -1,4 +1,3 @@
-#CookBook
 ##Human Activity Recognition Using Smartphones Dataset</br>
 ##About DATA</br>
 

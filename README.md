@@ -54,6 +54,10 @@ SAmerged <- cbind(submerge,activemegere)
 # (Step 4) : Now, we merged train resulsts and test results, we got 10299 rows and 561 column, and change column names to features names
 merged <- rbind(trainwrite,testwrite)
 names(merged) <- features$name
+names(merged) <- gsub("\\.|-","",names(merged))
+names(merged) <- gsub("^t{1}","time",names(merged))
+names(merged) <- gsub("^f{1}","frequency",names(merged))
+names(merged) <- gsub("\\()","",names(merged))
 
 # We should merge now all train and test results with subject and activities, and also change column names to Subject for subjects and Activity for activities
 all <- cbind(merged, SAmerged)

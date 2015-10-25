@@ -52,7 +52,10 @@ SAmerged <- cbind(submerge,activemegere)
 # (Step 4) : Now, we merged train resulsts and test results, we got 10299 rows and 561 column, and change column names to features names
 merged <- rbind(trainwrite,testwrite)
 names(merged) <- features$name
-
+names(merged) <- gsub("\\.|-","",names(merged))
+names(merged) <- gsub("^t{1}","time",names(merged))
+names(merged) <- gsub("^f{1}","frequency",names(merged))
+names(merged) <- gsub("\\()","",names(merged))
 # We should merge now all train and test results with subject and activities, and also change column names to Subject for subjects and Activity for activities
 all <- cbind(merged, SAmerged)
 colnames(all)[562] <- "Subject"
@@ -72,11 +75,12 @@ all_fat$Activity <- NULL
 # change column name from ActivityName to Activity
 colnames(all_fat)[88] <- "Activity"
 
-# (Step 5) : make tidy data, group all data by subject and activity, summarise it and calculate average.
+# (Step 5) : make tidy(wide form) data, group all data by subject and activity, summarise it and calculate average. 180rows, 88columns
 groupbyActSub <- group_by(all_fat, Subject, Activity)
-tidy <- summarise_each(groupbyActSub, funs(mean))
-# Make it tidy, narrow form, where we have for every subject every activity, and every mesurament and mean of value.
-melted <- melt(tidy, id=c("Subject", "Activity"))
+wide <- summarise_each(groupbyActSub, funs(mean))
+# Make it tidy(narrow form) where we have for every subject, every activity, mesurament and mean value.
+tidy <- melt(wide, id=c("Subject", "Activity"))
 
-# Write txt file, and it can be attached to course project 
-write.table(melted, "tidy.txt", sep="\t", row.names = FALSE)
+# Write txt file, and then you can attached it to course project, wide or tidy 
+write.table(wide, "wide.txt", sep="\t", row.names = FALSE)
+write.table(tidy, "tidy.txt", sep="\t", row.names = FALSE)
